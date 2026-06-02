@@ -70,9 +70,9 @@ const Route = createFileRoute("/kurslar/$slug")({
   },
   component: CoursePage,
   notFoundComponent: () => (
-    <main className="min-h-screen bg-paper text-ink">
+    <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />
-      <div className="mx-auto max-w-2xl px-6 pb-24 pt-40 text-center">
+      <div className="mx-auto max-w-2xl px-5 pb-20 pt-32 text-center sm:px-6 md:pb-24 md:pt-40">
         <p className="eyebrow">404</p>
         <h1 className="mt-4 font-display text-4xl">Kurs topilmadi</h1>
         <p className="mt-4 text-muted-foreground">Ushbu yo'nalish mavjud emas yoki ko'chirilgan.</p>
@@ -91,12 +91,12 @@ function CoursePage() {
   const { course: c } = Route.useLoaderData();
   const others = courses.filter((x) => x.slug !== c.slug).slice(0, 3);
   return (
-    <main className="min-h-screen bg-paper text-ink">
+    <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />
 
       {/* Hero */}
-      <section className="bg-paper pt-32 md:pt-40">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+      <section className="bg-paper pt-28 sm:pt-32 md:pt-40">
+        <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
           <div className="eyebrow">
             <Link to="/" className="hover:text-ember">
               Bosh sahifa
@@ -139,7 +139,7 @@ function CoursePage() {
           </div>
 
           {/* Meta strip */}
-          <dl className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-md border border-rule bg-rule md:grid-cols-4">
+          <dl className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-md border border-rule bg-rule sm:grid-cols-2 md:mt-16 md:grid-cols-4">
             <Meta label="Davomiyligi" value={c.duration} />
             <Meta label="Daraja" value={c.level} />
             <Meta label="Jadval" value={c.schedule} />
@@ -149,8 +149,8 @@ function CoursePage() {
       </section>
 
       {/* Program */}
-      <section className="bg-paper py-24 md:py-32">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+      <section className="bg-paper py-20 md:py-32">
+        <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
           <div className="grid grid-cols-12 gap-6 md:gap-10">
             <div className="col-span-12 md:col-span-4">
               <div className="eyebrow">Dastur</div>
@@ -169,7 +169,7 @@ function CoursePage() {
               {c.program.map((p, i) => (
                 <li
                   key={i}
-                  className={`grid grid-cols-12 gap-4 py-8 md:gap-6 ${i === 0 ? "border-y" : "border-b"} border-rule`}
+                  className={`grid grid-cols-12 gap-4 py-7 md:gap-6 md:py-8 ${i === 0 ? "border-y" : "border-b"} border-rule`}
                 >
                   <div className="col-span-12 md:col-span-3">
                     <div className="font-display text-sm text-ember">{p.week}</div>
@@ -204,7 +204,10 @@ function CoursePage() {
             </div>
             <ul className="col-span-12 md:col-span-8 md:pt-4">
               {c.outcomes.map((o, i) => (
-                <li key={i} className="flex gap-4 border-b border-rule py-5 text-lg text-ink/85">
+                <li
+                  key={i}
+                  className="flex gap-4 border-b border-rule py-5 text-base text-ink/85 sm:text-lg"
+                >
                   <span className="font-display text-ember">{String(i + 1).padStart(2, "0")}</span>
                   <span>{o}</span>
                 </li>
@@ -215,8 +218,8 @@ function CoursePage() {
       </section>
 
       {/* FAQ */}
-      <section className="bg-ink py-24 text-paper md:py-32">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+      <section className="bg-ink py-20 text-paper md:py-32">
+        <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
           <div className="grid grid-cols-12 gap-6 md:gap-10">
             <div className="col-span-12 md:col-span-4">
               <div className="text-[11px] uppercase tracking-[0.22em] text-paper/60">
@@ -236,7 +239,7 @@ function CoursePage() {
             <div className="col-span-12 md:col-span-8">
               {c.faqs.map((f, i) => (
                 <details key={i} className="group border-b border-paper/15 py-6">
-                  <summary className="flex cursor-pointer list-none items-start justify-between gap-6">
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 sm:gap-6">
                     <span className="font-display text-xl text-paper md:text-2xl">{f.q}</span>
                     <span className="mt-1 font-display text-2xl text-ember transition-transform group-open:rotate-45">
                       +
@@ -251,8 +254,8 @@ function CoursePage() {
       </section>
 
       {/* Other courses */}
-      <section className="bg-paper py-24">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+      <section className="bg-paper py-20 md:py-24">
+        <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
           <div className="eyebrow">Boshqa yo'nalishlar</div>
           <ul className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {others.map((o) => (

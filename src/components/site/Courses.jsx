@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { courses } from "@/data/courses";
 function Courses() {
   return (
-    <section id="yonalishlar" className="bg-paper py-24 md:py-36">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+    <section id="yonalishlar" className="bg-paper py-20 md:py-36">
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-4">
             <div className="eyebrow">Yo'nalishlar</div>
@@ -32,7 +32,7 @@ function Courses() {
                 <Link
                   to="/kurslar/$slug"
                   params={{ slug: c.slug }}
-                  className="grid grid-cols-12 gap-4 py-8 md:gap-6 md:py-10"
+                  className="grid grid-cols-12 gap-4 py-7 md:gap-6 md:py-10"
                   aria-label={`${c.title} haqida batafsil`}
                 >
                   <div className="col-span-2 md:col-span-1">
@@ -49,11 +49,11 @@ function Courses() {
                       {c.blurb}
                     </p>
                   </div>
-                  <div className="col-span-6 md:col-span-2">
+                  <div className="col-span-12 sm:col-span-6 md:col-span-2">
                     <div className="eyebrow">Davomiyligi</div>
                     <div className="mt-2 text-sm text-ink">{c.duration}</div>
                   </div>
-                  <div className="col-span-6 md:col-span-2">
+                  <div className="col-span-12 sm:col-span-6 md:col-span-2">
                     <div className="eyebrow">Daraja</div>
                     <div className="mt-2 text-sm text-ink">{c.level}</div>
                   </div>

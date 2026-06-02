@@ -6,7 +6,7 @@ const fullAddress = "Andijon viloyati, Qo'rg'ontepa tumani Hokimyat roparasida."
 function Footer() {
   return (
     <footer className="bg-ink py-16 text-paper">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-6 md:gap-10 md:px-10">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-5 sm:px-6 md:gap-10 md:px-10">
         <div className="col-span-12 md:col-span-5">
           <Wordmark invert />
           <p className="mt-6 max-w-xs text-sm text-paper/60">
@@ -14,7 +14,7 @@ function Footer() {
           </p>
         </div>
 
-        <div className="col-span-6 md:col-span-2">
+        <div className="col-span-12 sm:col-span-6 md:col-span-2">
           <div className="text-[10px] uppercase tracking-[0.22em] text-paper/40">Sayt</div>
           <ul className="mt-4 space-y-2 text-sm">
             <li>
@@ -40,7 +40,7 @@ function Footer() {
           </ul>
         </div>
 
-        <div className="col-span-6 md:col-span-2">
+        <div className="col-span-12 sm:col-span-6 md:col-span-2">
           <div className="text-[10px] uppercase tracking-[0.22em] text-paper/40">Aloqa</div>
           <ul className="mt-4 space-y-2 text-sm">
             <li>
@@ -61,7 +61,7 @@ function Footer() {
           <p className="mt-4 font-display text-lg leading-tight">{fullAddress}</p>
         </div>
 
-        <div className="col-span-12 mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-paper/10 pt-6 text-xs text-paper/40">
+        <div className="col-span-12 mt-10 flex flex-col gap-3 border-t border-paper/10 pt-6 text-xs text-paper/40 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
           <span>
             © {/* @__PURE__ */ new Date().getFullYear()} FARIKS. Barcha huquqlar himoyalangan.
           </span>

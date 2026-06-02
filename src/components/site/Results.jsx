@@ -20,8 +20,8 @@ const stories = [
 ];
 function Results() {
   return (
-    <section id="natijalar" className="bg-paper py-24 md:py-36">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+    <section id="natijalar" className="bg-paper py-20 md:py-36">
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-3">
             <div className="eyebrow">Natijalar</div>
@@ -42,7 +42,7 @@ function Results() {
             {stories.map((s, i) => (
               <figure
                 key={i}
-                className="relative flex flex-col justify-between border border-rule bg-card p-7 transition-colors hover:border-ember"
+                className="relative flex flex-col justify-between border border-rule bg-card p-6 transition-colors hover:border-ember sm:p-7"
               >
                 <span
                   className="absolute -top-4 left-5 font-display text-6xl leading-none text-ember"

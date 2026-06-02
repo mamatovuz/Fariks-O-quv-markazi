@@ -29,7 +29,7 @@ const Route = createFileRoute("/")({
 });
 function Index() {
   return (
-    <main className="min-h-screen bg-paper text-ink">
+    <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />
       <Hero />
       <Marquee />

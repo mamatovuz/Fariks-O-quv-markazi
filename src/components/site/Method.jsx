@@ -23,8 +23,8 @@ const steps = [
 ];
 function Method() {
   return (
-    <section id="metodika" className="relative bg-ink py-24 text-paper md:py-36">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+    <section id="metodika" className="relative bg-ink py-20 text-paper md:py-36">
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-5">
             <div className="text-[11px] uppercase tracking-[0.22em] text-paper/60">Metodika</div>
@@ -48,7 +48,7 @@ function Method() {
                 decoding="async"
                 width={1280}
                 height={960}
-                className="h-72 w-full object-cover grayscale md:h-96"
+                className="h-64 w-full object-cover grayscale sm:h-72 md:h-96"
               />
               <figcaption className="mt-3 text-xs text-paper/60">
                 «Yaxshi yozilgan xato — yangi bilimning kalitidir.»
@@ -60,7 +60,7 @@ function Method() {
             {steps.map((s, i) => (
               <li
                 key={s.n}
-                className={`grid grid-cols-12 gap-4 py-8 md:py-10 ${i === 0 ? "border-y" : "border-b"} border-paper/15`}
+                className={`grid grid-cols-12 gap-4 py-7 md:py-10 ${i === 0 ? "border-y" : "border-b"} border-paper/15`}
               >
                 <div className="col-span-2">
                   <span className="font-display text-3xl text-ember" style={{ fontWeight: 500 }}>

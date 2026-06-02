@@ -42,7 +42,7 @@ function Wordmark({ small = false, invert = false }) {
         alt="FARIKS"
         width={512}
         height={512}
-        className={`${small ? "h-10 w-36" : "h-14 w-48 md:h-16 md:w-56"} object-cover object-center`}
+        className={`${small ? "h-10 w-36" : "h-12 w-40 sm:h-14 sm:w-48 md:h-16 md:w-56"} object-cover object-center`}
       />
     </Link>
   );

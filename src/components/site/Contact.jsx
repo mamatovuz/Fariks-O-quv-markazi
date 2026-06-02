@@ -4,6 +4,7 @@ const initialStatus = {
   type: "idle",
   message: "",
 };
+
 const mapUrl = "https://maps.app.goo.gl/yYW1uQNSPN1BweEc8";
 const fullAddress = "Andijon viloyati, Qo'rg'ontepa tumani Hokimyat roparasida.";
 
@@ -47,15 +48,15 @@ function Contact() {
   const isSending = status.type === "sending";
 
   return (
-    <section id="aloqa" className="relative overflow-hidden bg-ember/95 py-24 text-ink md:py-36">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-6 md:gap-10 md:px-10">
+    <section id="aloqa" className="relative overflow-hidden bg-ember/95 py-20 text-ink md:py-36">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-5 sm:px-6 md:gap-10 md:px-10">
         <div className="col-span-12 md:col-span-6">
           <div className="text-[11px] uppercase tracking-[0.22em] text-ink/70">Aloqa</div>
           <h2
-            className="mt-6 font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] tracking-[-0.02em]"
+            className="mt-6 font-display text-[clamp(2.35rem,10vw,5rem)] leading-[0.9] tracking-[-0.02em]"
             style={{ fontWeight: 400 }}
           >
-            Bir suhbat —
+            Bir suhbat -
             <br />
             <em className="italic" style={{ fontWeight: 300 }}>
               hammasining
@@ -64,38 +65,36 @@ function Contact() {
             boshlanishi.
           </h2>
 
-          <dl className="mt-12 space-y-6 text-base">
-            <div className="grid grid-cols-3 gap-4 border-b border-ink/20 pb-4">
-              <dt className="text-[11px] uppercase tracking-[0.22em] text-ink/70">Aloqa</dt>
-              <dd className="col-span-2 font-display text-xl">
-                Ariza yuboring, adminlar tez orada qo'ng'iroq qiladi
-              </dd>
-            </div>
-            <div className="grid grid-cols-3 gap-4 border-b border-ink/20 pb-4">
-              <dt className="text-[11px] uppercase tracking-[0.22em] text-ink/70">Manzil</dt>
-              <dd className="col-span-2 font-display text-xl">
-                {fullAddress}
-                <a
-                  href={mapUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-3 block text-sm font-sans text-ink/70 underline-offset-4 hover:text-ink hover:underline"
-                >
-                  Xaritada ko'rish
-                </a>
-              </dd>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <dt className="text-[11px] uppercase tracking-[0.22em] text-ink/70">Ish vaqti</dt>
-              <dd className="col-span-2 font-display text-xl">Du — Sha · 09:00 — 20:00</dd>
-            </div>
+          <dl className="mt-10 space-y-6 text-base sm:mt-12">
+            <ContactFact label="Aloqa">
+              Ariza yuboring, adminlar tez orada qo'ng'iroq qiladi
+            </ContactFact>
+
+            <ContactFact label="Manzil">
+              {fullAddress}
+              <a
+                href={mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 block text-sm font-sans text-ink/70 underline-offset-4 hover:text-ink hover:underline"
+              >
+                Xaritada ko'rish
+              </a>
+            </ContactFact>
+
+            <ContactFact label="Ish vaqti" border={false}>
+              Du - Sha, 09:00 - 20:00
+            </ContactFact>
           </dl>
         </div>
 
         <div className="col-span-12 md:col-span-6 md:pl-10">
-          <form onSubmit={handleSubmit} className="rounded-md bg-paper p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="rounded-md bg-paper p-6 sm:p-8 md:p-10">
             <div className="eyebrow">Bepul sinov darsi uchun</div>
-            <h3 className="mt-3 font-display text-3xl text-ink" style={{ fontWeight: 500 }}>
+            <h3
+              className="mt-3 font-display text-2xl text-ink sm:text-3xl"
+              style={{ fontWeight: 500 }}
+            >
               Ariza qoldiring
             </h3>
 
@@ -111,7 +110,7 @@ function Contact() {
                 >
                   <option>IELTS</option>
                   <option>SAT</option>
-                  <option>Ingliz tili — Foundation</option>
+                  <option>Ingliz tili - Foundation</option>
                   <option>Matematika</option>
                   <option>Prezident maktabi</option>
                   <option>Informatika</option>
@@ -145,10 +144,10 @@ function Contact() {
             <button
               type="submit"
               disabled={isSending}
-              className="mt-10 inline-flex w-full items-center justify-between rounded-full bg-ink px-7 py-4 text-sm text-paper transition-all hover:bg-ember-deep disabled:opacity-70"
+              className="mt-10 inline-flex w-full items-center justify-between rounded-full bg-ink px-6 py-4 text-sm text-paper transition-all hover:bg-ember-deep disabled:opacity-70 sm:px-7"
             >
               <span>{isSending ? "Yuborilmoqda..." : "Yuborish"}</span>
-              <span aria-hidden>{status.type === "sent" ? "\u2713" : "\u2192"}</span>
+              <span aria-hidden>{status.type === "sent" ? "OK" : "->"}</span>
             </button>
           </form>
         </div>
@@ -156,6 +155,20 @@ function Contact() {
     </section>
   );
 }
+
+function ContactFact({ label, children, border = true }) {
+  return (
+    <div
+      className={`grid grid-cols-1 gap-3 pb-4 sm:grid-cols-3 sm:gap-4 ${
+        border ? "border-b border-ink/20" : ""
+      }`}
+    >
+      <dt className="text-[11px] uppercase tracking-[0.22em] text-ink/70">{label}</dt>
+      <dd className="font-display text-lg leading-tight sm:col-span-2 sm:text-xl">{children}</dd>
+    </div>
+  );
+}
+
 function Field({ label, name, placeholder, type = "text" }) {
   return (
     <div>
@@ -173,4 +186,5 @@ function Field({ label, name, placeholder, type = "text" }) {
     </div>
   );
 }
+
 export { Contact };

@@ -23,9 +23,9 @@ const teachers = [
 ];
 function Teachers() {
   return (
-    <section id="ustozlar" className="bg-paper py-24 md:py-36">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="flex items-end justify-between">
+    <section id="ustozlar" className="bg-paper py-20 md:py-36">
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="eyebrow">Ustozlar</div>
             <h2
@@ -48,7 +48,7 @@ function Teachers() {
           </a>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+        <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 md:grid-cols-3 md:gap-8">
           {teachers.map((t, i) => (
             <article key={t.name} className={i === 1 ? "md:mt-20" : ""}>
               <div className="group/image relative overflow-hidden bg-muted">
