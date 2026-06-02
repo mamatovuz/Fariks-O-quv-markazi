@@ -41,21 +41,34 @@ function stripRouteTreeTypeFooter() {
   };
 }
 
-export default defineConfig({
-  plugins: [
-    tanstackStart({
-      router: {
-        generatedRouteTree: "routeTree.gen.js",
-        disableTypes: true,
+export default defineConfig(async () => {
+  const platformPlugins = [];
+
+  if (process.env.NETLIFY === "true") {
+    const { default: netlify } = await import("@netlify/vite-plugin-tanstack-start");
+    platformPlugins.push(netlify());
+  } else if (process.env.VERCEL === "1" || process.env.VERCEL === "true") {
+    const { nitro } = await import("nitro/vite");
+    platformPlugins.push(nitro());
+  }
+
+  return {
+    plugins: [
+      tanstackStart({
+        router: {
+          generatedRouteTree: "routeTree.gen.js",
+          disableTypes: true,
+        },
+      }),
+      ...platformPlugins,
+      stripRouteTreeTypeFooter(),
+      viteReact(),
+      tailwindcss(),
+    ],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
       },
-    }),
-    stripRouteTreeTypeFooter(),
-    viteReact(),
-    tailwindcss(),
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
     },
-  },
+  };
 });
