@@ -56,6 +56,23 @@ async function api(path, options = {}) {
   return result;
 }
 
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok || result.ok === false) {
+    throw new Error(result.error || "Rasm yuklanmadi.");
+  }
+
+  return result.url;
+}
+
 function AdminPage() {
   const [checking, setChecking] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
@@ -165,7 +182,10 @@ function AdminPage() {
   if (!authenticated) {
     return (
       <AdminShell status={status}>
-        <form onSubmit={handleLogin} className="mx-auto max-w-md rounded-md bg-paper p-8 text-ink">
+        <form
+          onSubmit={handleLogin}
+          className="mx-auto max-w-md rounded-md border border-rule bg-card p-8 text-ink shadow-xl"
+        >
           <div className="eyebrow">Admin panel</div>
           <h1 className="mt-4 font-display text-4xl" style={{ fontWeight: 500 }}>
             FARIKS boshqaruv
@@ -263,6 +283,7 @@ function AdminPage() {
                 selectedTeacher={selectedTeacher}
                 setSelectedTeacher={setSelectedTeacher}
                 currentTeacher={currentTeacher}
+                setStatus={setStatus}
               />
             ) : null}
             {tab === "settings" ? (
@@ -281,10 +302,10 @@ function AdminPage() {
 
 function AdminShell({ children, status }) {
   return (
-    <main className="min-h-screen bg-ink/95 py-8 text-paper">
+    <main className="min-h-screen bg-paper py-8 text-ink">
       {children}
       {status ? (
-        <div className="fixed bottom-5 left-1/2 z-50 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-full bg-paper px-5 py-3 text-center text-sm text-ink shadow-xl">
+        <div className="fixed bottom-5 left-1/2 z-50 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-full bg-ink px-5 py-3 text-center text-sm text-paper shadow-xl">
           {status}
         </div>
       ) : null}
@@ -580,10 +601,28 @@ function TeachersEditor({
   selectedTeacher,
   setSelectedTeacher,
   currentTeacher,
+  setStatus,
 }) {
+  async function handleUpload(file) {
+    if (!file) return;
+
+    setStatus("Rasm yuklanmoqda...");
+
+    try {
+      const url = await uploadImage(file);
+      updateContent((draft) => {
+        draft.teachers[selectedTeacher].img = url;
+        return draft;
+      });
+      setStatus("Rasm yuklandi. Saqlash tugmasini bosing.");
+    } catch (error) {
+      setStatus(error.message);
+    }
+  }
+
   return (
     <div>
-      <SectionTitle title="Ustozlar" body="Ism, lavozim, izoh va rasm URL." />
+      <SectionTitle title="Ustozlar" body="Ism, lavozim, izoh va rasm yuklash." />
       <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
         <aside className="space-y-2">
           {content.teachers.map((teacher, index) => (
@@ -619,6 +658,19 @@ function TeachersEditor({
                 />
               ) : null}
             </div>
+            <label className="block rounded-md border border-dashed border-rule bg-card p-4 transition hover:border-ember">
+              <span className="eyebrow">Rasm yuklash</span>
+              <span className="mt-2 block text-sm text-muted-foreground">
+                Kompyuterdan PNG, JPG, WEBP yoki GIF tanlang. Yuklangandan keyin "Hammasini saqlash"
+                tugmasini bosing.
+              </span>
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                onChange={(event) => handleUpload(event.target.files?.[0])}
+                className="mt-4 block w-full text-sm file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-5 file:py-3 file:text-sm file:text-paper hover:file:bg-ember"
+              />
+            </label>
             {["img", "name", "role", "note"].map((field) =>
               field === "note" ? (
                 <Textarea

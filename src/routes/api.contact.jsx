@@ -4,7 +4,6 @@ const telegramTimeoutMs = 12_000;
 const telegramMaxAttempts = 3;
 const telegramChunkSize = 3_400;
 const retryableTelegramStatuses = new Set([408, 429, 500, 502, 503, 504]);
-let webhookEnsurePromise;
 
 class TelegramError extends Error {
   constructor(message, options = {}) {
@@ -176,18 +175,12 @@ async function sendTelegramMessage({ token, chatId, text }) {
 
 async function ensureTelegramWebhook({ token, webhookUrl }) {
   if (!token || !webhookUrl) return;
-  if (!webhookEnsurePromise) {
-    webhookEnsurePromise = fetchTelegram(`https://api.telegram.org/bot${token}/setWebhook`, {
-      url: webhookUrl,
-      drop_pending_updates: true,
-      allowed_updates: ["callback_query"],
-    }).catch((error) => {
-      webhookEnsurePromise = undefined;
-      console.error("Telegram webhook ensure failed:", error);
-    });
-  }
 
-  await webhookEnsurePromise;
+  await fetchTelegram(`https://api.telegram.org/bot${token}/setWebhook`, {
+    url: webhookUrl,
+    drop_pending_updates: true,
+    allowed_updates: ["callback_query"],
+  });
 }
 
 function buildMessage({ name, phone, course, details }) {
@@ -248,6 +241,9 @@ export const Route = createFileRoute("/api/contact")({
             token,
             chatId,
             text: buildMessage({ name, phone, course, details }),
+          });
+          await ensureTelegramWebhook({ token, webhookUrl }).catch((error) => {
+            console.error("Telegram webhook refresh after send failed:", error);
           });
         } catch (error) {
           console.error("Telegram sendMessage failed:", error);

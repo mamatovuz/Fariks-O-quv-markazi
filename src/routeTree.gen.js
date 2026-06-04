@@ -9,10 +9,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UploadsFileRouteImport } from './routes/uploads.$file'
 import { Route as KurslarSlugRouteImport } from './routes/kurslar.$slug'
 import { Route as ApiTelegramWebhookRouteImport } from './routes/api.telegram-webhook'
 import { Route as ApiSiteContentRouteImport } from './routes/api.site-content'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
+import { Route as ApiAdminUploadRouteImport } from './routes/api.admin.upload'
 import { Route as ApiAdminSessionRouteImport } from './routes/api.admin.session'
 import { Route as ApiAdminLogoutRouteImport } from './routes/api.admin.logout'
 import { Route as ApiAdminLoginRouteImport } from './routes/api.admin.login'
@@ -27,6 +29,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+})
+const UploadsFileRoute = UploadsFileRouteImport.update({
+  id: '/uploads/$file',
+  path: '/uploads/$file',
   getParentRoute: () => rootRouteImport,
 })
 const KurslarSlugRoute = KurslarSlugRouteImport.update({
@@ -47,6 +54,11 @@ const ApiSiteContentRoute = ApiSiteContentRouteImport.update({
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+})
+const ApiAdminUploadRoute = ApiAdminUploadRouteImport.update({
+  id: '/api/admin/upload',
+  path: '/api/admin/upload',
   getParentRoute: () => rootRouteImport,
 })
 const ApiAdminSessionRoute = ApiAdminSessionRouteImport.update({
@@ -82,10 +94,12 @@ const rootRouteChildren = {
   ApiSiteContentRoute: ApiSiteContentRoute,
   ApiTelegramWebhookRoute: ApiTelegramWebhookRoute,
   KurslarSlugRoute: KurslarSlugRoute,
+  UploadsFileRoute: UploadsFileRoute,
   ApiAdminContentRoute: ApiAdminContentRoute,
   ApiAdminCredentialsRoute: ApiAdminCredentialsRoute,
   ApiAdminLoginRoute: ApiAdminLoginRoute,
   ApiAdminLogoutRoute: ApiAdminLogoutRoute,
   ApiAdminSessionRoute: ApiAdminSessionRoute,
+  ApiAdminUploadRoute: ApiAdminUploadRoute,
 }
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)
