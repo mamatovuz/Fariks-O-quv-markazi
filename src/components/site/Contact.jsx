@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const initialStatus = {
   type: "idle",
@@ -10,9 +10,13 @@ const fullAddress = "Andijon viloyati, Qo'rg'ontepa tumani Hokimyat roparasida."
 
 function Contact() {
   const [status, setStatus] = useState(initialStatus);
+  const isSubmittingRef = useRef(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (isSubmittingRef.current || status.type === "sending") return;
+    isSubmittingRef.current = true;
+
     const form = event.currentTarget;
     const payload = Object.fromEntries(new FormData(form));
 
@@ -28,7 +32,7 @@ function Contact() {
       });
 
       const result = await response.json().catch(() => ({}));
-      if (!response.ok) {
+      if (!response.ok || result.ok === false) {
         throw new Error(result.error || "Arizani yuborib bo'lmadi.");
       }
 
@@ -40,8 +44,10 @@ function Contact() {
     } catch (error) {
       setStatus({
         type: "error",
-        message: error.message || "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+        message: error.message || "Ariza yuborilmadi. Iltimos, qayta urinib ko'ring.",
       });
+    } finally {
+      isSubmittingRef.current = false;
     }
   }
 
