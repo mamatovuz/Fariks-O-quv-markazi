@@ -7,11 +7,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KurslarSlugRouteImport } from './routes/kurslar.$slug'
 import { Route as ApiTelegramWebhookRouteImport } from './routes/api.telegram-webhook'
+import { Route as ApiSiteContentRouteImport } from './routes/api.site-content'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
+import { Route as ApiAdminSessionRouteImport } from './routes/api.admin.session'
+import { Route as ApiAdminLogoutRouteImport } from './routes/api.admin.logout'
+import { Route as ApiAdminLoginRouteImport } from './routes/api.admin.login'
+import { Route as ApiAdminCredentialsRouteImport } from './routes/api.admin.credentials'
+import { Route as ApiAdminContentRouteImport } from './routes/api.admin.content'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+})
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -27,16 +39,53 @@ const ApiTelegramWebhookRoute = ApiTelegramWebhookRouteImport.update({
   path: '/api/telegram-webhook',
   getParentRoute: () => rootRouteImport,
 })
+const ApiSiteContentRoute = ApiSiteContentRouteImport.update({
+  id: '/api/site-content',
+  path: '/api/site-content',
+  getParentRoute: () => rootRouteImport,
+})
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 })
+const ApiAdminSessionRoute = ApiAdminSessionRouteImport.update({
+  id: '/api/admin/session',
+  path: '/api/admin/session',
+  getParentRoute: () => rootRouteImport,
+})
+const ApiAdminLogoutRoute = ApiAdminLogoutRouteImport.update({
+  id: '/api/admin/logout',
+  path: '/api/admin/logout',
+  getParentRoute: () => rootRouteImport,
+})
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+})
+const ApiAdminCredentialsRoute = ApiAdminCredentialsRouteImport.update({
+  id: '/api/admin/credentials',
+  path: '/api/admin/credentials',
+  getParentRoute: () => rootRouteImport,
+})
+const ApiAdminContentRoute = ApiAdminContentRouteImport.update({
+  id: '/api/admin/content',
+  path: '/api/admin/content',
+  getParentRoute: () => rootRouteImport,
+})
 
 const rootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiSiteContentRoute: ApiSiteContentRoute,
   ApiTelegramWebhookRoute: ApiTelegramWebhookRoute,
   KurslarSlugRoute: KurslarSlugRoute,
+  ApiAdminContentRoute: ApiAdminContentRoute,
+  ApiAdminCredentialsRoute: ApiAdminCredentialsRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
+  ApiAdminLogoutRoute: ApiAdminLogoutRoute,
+  ApiAdminSessionRoute: ApiAdminSessionRoute,
 }
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)

@@ -1,15 +1,14 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { coursesBySlug, courses } from "@/data/courses";
+import { useSiteContent } from "@/hooks/use-site-content";
 const Route = createFileRoute("/kurslar/$slug")({
   loader: ({ params }) => {
-    const course = coursesBySlug[params.slug];
-    if (!course) throw notFound();
-    return { course };
+    return { slug: params.slug };
   },
   head: ({ loaderData }) => {
-    const c = loaderData?.course;
+    const c = coursesBySlug[loaderData?.slug];
     if (!c)
       return {
         meta: [{ title: "Kurs topilmadi \xB7 FARIKS" }],
@@ -88,8 +87,33 @@ const Route = createFileRoute("/kurslar/$slug")({
   ),
 });
 function CoursePage() {
-  const { course: c } = Route.useLoaderData();
-  const others = courses.filter((x) => x.slug !== c.slug).slice(0, 3);
+  const { slug } = Route.useLoaderData();
+  const content = useSiteContent();
+  const c = content.courses.find((course) => course.slug === slug);
+
+  if (!c) {
+    return (
+      <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
+        <Nav />
+        <div className="mx-auto max-w-2xl px-5 pb-20 pt-32 text-center sm:px-6 md:pb-24 md:pt-40">
+          <p className="eyebrow">404</p>
+          <h1 className="mt-4 font-display text-4xl">Kurs topilmadi</h1>
+          <p className="mt-4 text-muted-foreground">
+            Ushbu yo'nalish mavjud emas yoki ko'chirilgan.
+          </p>
+          <Link
+            to="/"
+            className="mt-8 inline-flex rounded-full bg-ink px-6 py-3 text-sm text-paper hover:bg-ember"
+          >
+            Bosh sahifaga qaytish -&gt;
+          </Link>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
+
+  const others = content.courses.filter((x) => x.slug !== c.slug).slice(0, 3);
   return (
     <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />

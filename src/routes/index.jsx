@@ -8,6 +8,7 @@ import { Teachers } from "@/components/site/Teachers";
 import { Results } from "@/components/site/Results";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
+import { useSiteContent } from "@/hooks/use-site-content";
 const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -28,16 +29,18 @@ const Route = createFileRoute("/")({
   component: Index,
 });
 function Index() {
+  const content = useSiteContent();
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />
-      <Hero />
+      <Hero stats={content.stats} />
       <Marquee />
-      <Courses />
+      <Courses courses={content.courses} intro={content.coursesIntro} />
       <Method />
-      <Teachers />
+      <Teachers teachers={content.teachers} />
       <Results />
-      <Contact />
+      <Contact courses={content.courses} />
       <Footer />
     </main>
   );

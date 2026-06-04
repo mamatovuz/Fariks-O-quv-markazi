@@ -1,27 +1,6 @@
-import t1Color from "@/assets/teacher-1-color.jpg";
-import t2Color from "@/assets/teacher-2-color.jpg";
-import t3Color from "@/assets/teacher-3-color.jpg";
-const teachers = [
-  {
-    img: t1Color,
-    name: "Sherzod Karimov",
-    role: "Bosh ustoz \xB7 Matematika",
-    note: "20 yillik tajriba. Olimpiada g'oliblari ustozi.",
-  },
-  {
-    img: t2Color,
-    name: "Madina Rashidova",
-    role: "IELTS \xB7 Speaking & Writing",
-    note: "British Council sertifikati. Cambridge bitiruvchisi.",
-  },
-  {
-    img: t3Color,
-    name: "Bekzod Yusupov",
-    role: "SAT \xB7 Math & Informatika",
-    note: "MIT mock-kurs muallifi. 12 yillik mentorlik.",
-  },
-];
-function Teachers() {
+import { defaultContent } from "@/data/site-content";
+
+function Teachers({ teachers = defaultContent.teachers }) {
   return (
     <section id="ustozlar" className="bg-paper py-20 md:py-36">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
@@ -32,7 +11,7 @@ function Teachers() {
               className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[0.95] tracking-[-0.02em] text-ink"
               style={{ fontWeight: 400 }}
             >
-              Bilimni emas —
+              Bilimni emas -
               <br />
               <em className="italic" style={{ fontWeight: 300 }}>
                 o'qishni o'rgatadigan
@@ -44,13 +23,13 @@ function Teachers() {
             href="#aloqa"
             className="hidden text-sm text-muted-foreground underline-offset-4 hover:text-ember hover:underline md:inline"
           >
-            Barcha jamoa →
+            Barcha jamoa -&gt;
           </a>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 md:grid-cols-3 md:gap-8">
           {teachers.map((t, i) => (
-            <article key={t.name} className={i === 1 ? "md:mt-20" : ""}>
+            <article key={`${t.name}-${i}`} className={i === 1 ? "md:mt-20" : ""}>
               <div className="group/image relative overflow-hidden bg-muted">
                 <img
                   src={t.img}
@@ -61,7 +40,7 @@ function Teachers() {
                   className="aspect-[4/5] w-full object-cover grayscale transition-[filter,transform] duration-700 ease-out group-hover/image:scale-[1.03] group-hover/image:grayscale-0 motion-reduce:transition-none"
                 />
                 <span className="absolute left-3 top-3 text-[10px] uppercase tracking-[0.22em] text-paper mix-blend-difference">
-                  0{i + 1}
+                  {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
               <div className="mt-5 flex items-start justify-between gap-4">
@@ -81,4 +60,5 @@ function Teachers() {
     </section>
   );
 }
+
 export { Teachers };

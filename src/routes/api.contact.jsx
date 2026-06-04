@@ -4,6 +4,7 @@ const telegramTimeoutMs = 12_000;
 const telegramMaxAttempts = 3;
 const telegramChunkSize = 3_400;
 const retryableTelegramStatuses = new Set([408, 429, 500, 502, 503, 504]);
+let webhookEnsurePromise;
 
 class TelegramError extends Error {
   constructor(message, options = {}) {
@@ -36,9 +37,15 @@ function json(data, init) {
 }
 
 function getTelegramConfig() {
+  const siteUrl = clean(process.env.PUBLIC_SITE_URL || "https://fariksuz.up.railway.app").replace(
+    /\/+$/,
+    "",
+  );
+
   return {
     token: clean(process.env.TELEGRAM_BOT_TOKEN),
     chatId: clean(process.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHANNEL_ID),
+    webhookUrl: clean(process.env.TELEGRAM_WEBHOOK_URL || `${siteUrl}/api/telegram-webhook`),
   };
 }
 
@@ -167,6 +174,22 @@ async function sendTelegramMessage({ token, chatId, text }) {
   }
 }
 
+async function ensureTelegramWebhook({ token, webhookUrl }) {
+  if (!token || !webhookUrl) return;
+  if (!webhookEnsurePromise) {
+    webhookEnsurePromise = fetchTelegram(`https://api.telegram.org/bot${token}/setWebhook`, {
+      url: webhookUrl,
+      drop_pending_updates: true,
+      allowed_updates: ["callback_query"],
+    }).catch((error) => {
+      webhookEnsurePromise = undefined;
+      console.error("Telegram webhook ensure failed:", error);
+    });
+  }
+
+  await webhookEnsurePromise;
+}
+
 function buildMessage({ name, phone, course, details }) {
   const submittedAt = new Intl.DateTimeFormat("uz-UZ", {
     dateStyle: "medium",
@@ -209,7 +232,7 @@ export const Route = createFileRoute("/api/contact")({
           return json({ ok: false, error: "Barcha maydonlarni to'ldiring." }, { status: 400 });
         }
 
-        const { token, chatId } = getTelegramConfig();
+        const { token, chatId, webhookUrl } = getTelegramConfig();
 
         if (!token || !chatId) {
           console.error("Telegram config is missing.");
@@ -220,6 +243,7 @@ export const Route = createFileRoute("/api/contact")({
         }
 
         try {
+          await ensureTelegramWebhook({ token, webhookUrl });
           await sendTelegramMessage({
             token,
             chatId,

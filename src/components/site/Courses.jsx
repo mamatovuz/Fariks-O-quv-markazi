@@ -1,25 +1,25 @@
 import { Link } from "@tanstack/react-router";
-import { courses } from "@/data/courses";
-function Courses() {
+import { defaultContent } from "@/data/site-content";
+
+function Courses({ courses = defaultContent.courses, intro = defaultContent.coursesIntro }) {
   return (
     <section id="yonalishlar" className="bg-paper py-20 md:py-36">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-4">
-            <div className="eyebrow">Yo'nalishlar</div>
+            <div className="eyebrow">{intro.eyebrow}</div>
             <h2
               className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[0.95] tracking-[-0.02em] text-ink"
               style={{ fontWeight: 400 }}
             >
-              Bir nechta kurs.
+              {intro.title}
               <br />
               <em className="italic" style={{ fontWeight: 300 }}>
-                Bitta talab — sifat.
+                {intro.emphasis}
               </em>
             </h2>
             <p className="mt-6 max-w-sm text-base leading-relaxed text-muted-foreground">
-              Har bir guruhda 10 dan ortiq o'quvchi bo'lmaydi. Har bir o'quvchining individual
-              o'sish jadvali yuritiladi.
+              {intro.body}
             </p>
           </div>
 
@@ -62,7 +62,7 @@ function Courses() {
                       className="font-display text-xl text-ink transition-all group-hover:text-ember"
                       aria-hidden
                     >
-                      →
+                      -&gt;
                     </span>
                   </div>
                 </Link>
@@ -74,4 +74,5 @@ function Courses() {
     </section>
   );
 }
+
 export { Courses };

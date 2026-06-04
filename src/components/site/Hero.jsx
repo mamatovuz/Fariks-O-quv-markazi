@@ -1,6 +1,8 @@
 import hero from "@/assets/hero-student.jpg";
+import { defaultContent } from "@/data/site-content";
 import { ChevronMark } from "./Logo";
-function Hero() {
+
+function Hero({ stats = defaultContent.stats }) {
   return (
     <section id="top" className="relative overflow-hidden bg-paper pt-28 sm:pt-32 md:pt-40">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
@@ -80,10 +82,14 @@ function Hero() {
           </figure>
 
           <aside className="col-span-12 grid grid-cols-2 gap-x-6 md:col-span-3 md:flex md:flex-col md:justify-between">
-            <Stat number="1,240" label="Bitiruvchilar" />
-            <Stat number="94%" label="Oliygohga kirish" />
-            <Stat number="9" label="Yo'nalish" />
-            <Stat number="12" label="Ustoz" last />
+            {stats.map((stat, index) => (
+              <Stat
+                key={`${stat.number}-${stat.label}`}
+                number={stat.number}
+                label={stat.label}
+                last={index === stats.length - 1}
+              />
+            ))}
           </aside>
         </div>
       </div>

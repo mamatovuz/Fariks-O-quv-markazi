@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { defaultContent } from "@/data/site-content";
 
 const initialStatus = {
   type: "idle",
@@ -8,7 +9,7 @@ const initialStatus = {
 const mapUrl = "https://maps.app.goo.gl/yYW1uQNSPN1BweEc8";
 const fullAddress = "Andijon viloyati, Qo'rg'ontepa tumani Hokimyat roparasida.";
 
-function Contact() {
+function Contact({ courses = defaultContent.courses }) {
   const [status, setStatus] = useState(initialStatus);
   const isSubmittingRef = useRef(false);
 
@@ -114,12 +115,9 @@ function Contact() {
                   required
                   className="mt-2 w-full border-b border-rule bg-transparent py-3 text-base text-ink outline-none focus:border-ember"
                 >
-                  <option>IELTS</option>
-                  <option>SAT</option>
-                  <option>Ingliz tili - Foundation</option>
-                  <option>Matematika</option>
-                  <option>Prezident maktabi</option>
-                  <option>Informatika</option>
+                  {courses.map((course) => (
+                    <option key={course.slug}>{course.title}</option>
+                  ))}
                 </select>
               </div>
               <div>
