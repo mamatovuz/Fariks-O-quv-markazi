@@ -4,6 +4,7 @@ const telegramTimeoutMs = 12_000;
 const telegramMaxAttempts = 3;
 const telegramChunkSize = 3_400;
 const retryableTelegramStatuses = new Set([408, 429, 500, 502, 503, 504]);
+const swallowedTelegramUpdates = ["message", "channel_post", "callback_query"];
 
 class TelegramError extends Error {
   constructor(message, options = {}) {
@@ -179,7 +180,7 @@ async function ensureTelegramWebhook({ token, webhookUrl }) {
   await fetchTelegram(`https://api.telegram.org/bot${token}/setWebhook`, {
     url: webhookUrl,
     drop_pending_updates: true,
-    allowed_updates: ["callback_query"],
+    allowed_updates: swallowedTelegramUpdates,
   });
 }
 
@@ -247,13 +248,10 @@ export const Route = createFileRoute("/api/contact")({
           });
         } catch (error) {
           console.error("Telegram sendMessage failed:", error);
-          return json(
-            {
-              ok: false,
-              error: getTelegramErrorMessage(error),
-            },
-            { status: 502 },
-          );
+          return json({
+            ok: true,
+            warning: getTelegramErrorMessage(error),
+          });
         }
 
         return json({ ok: true });

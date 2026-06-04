@@ -1,11 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import { MongoClient } from "mongodb";
 
 import { defaultContent } from "@/data/site-content";
 
 const storePath =
   process.env.CONTENT_STORE_PATH || path.join(process.cwd(), ".data", "site-content.json");
+const mongoDbName = process.env.MONGODB_DB || "fariks";
+const mongoCollectionName = process.env.MONGODB_COLLECTION || "site_content";
+const mongoDocumentId = "main";
+let mongoClientPromise;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -110,7 +115,32 @@ function normalizeStore(store) {
   };
 }
 
-async function readStore() {
+function getMongoUri() {
+  return String(
+    process.env.MONGODB_URI || process.env.MONGO_URL || process.env.DATABASE_URL || "",
+  ).trim();
+}
+
+async function getMongoCollection() {
+  const uri = getMongoUri();
+  if (!uri) return null;
+
+  if (!mongoClientPromise) {
+    const client = new MongoClient(uri, {
+      connectTimeoutMS: 8_000,
+      serverSelectionTimeoutMS: 8_000,
+    });
+    mongoClientPromise = client.connect().catch((error) => {
+      mongoClientPromise = undefined;
+      throw error;
+    });
+  }
+
+  const client = await mongoClientPromise;
+  return client.db(mongoDbName).collection(mongoCollectionName);
+}
+
+async function readFileStore() {
   try {
     const text = await fs.readFile(storePath, "utf8");
     return normalizeStore(JSON.parse(text));
@@ -120,11 +150,57 @@ async function readStore() {
   }
 }
 
-async function writeStore(store) {
+async function writeFileStore(store) {
   const normalized = normalizeStore(store);
   await fs.mkdir(path.dirname(storePath), { recursive: true });
   await fs.writeFile(storePath, `${JSON.stringify(normalized, null, 2)}\n`, "utf8");
   return normalized;
+}
+
+async function readMongoStore(collection) {
+  const document = await collection.findOne({ _id: mongoDocumentId });
+
+  if (document) {
+    return normalizeStore(document);
+  }
+
+  const seed = await readFileStore();
+  await writeMongoStore(collection, seed);
+  return seed;
+}
+
+async function writeMongoStore(collection, store) {
+  const normalized = normalizeStore(store);
+  const now = new Date();
+
+  await collection.updateOne(
+    { _id: mongoDocumentId },
+    {
+      $set: {
+        auth: normalized.auth,
+        content: normalized.content,
+        updatedAt: now,
+      },
+      $setOnInsert: {
+        createdAt: now,
+      },
+    },
+    { upsert: true },
+  );
+
+  return normalized;
+}
+
+async function readStore() {
+  const collection = await getMongoCollection();
+  if (collection) return readMongoStore(collection);
+  return readFileStore();
+}
+
+async function writeStore(store) {
+  const collection = await getMongoCollection();
+  if (collection) return writeMongoStore(collection, store);
+  return writeFileStore(store);
 }
 
 async function readPublicContent() {

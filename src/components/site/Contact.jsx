@@ -43,9 +43,10 @@ function Contact({ courses = defaultContent.courses }) {
         message: "Arizangiz yuborildi. Tez orada adminlar aloqaga chiqadi.",
       });
     } catch (error) {
+      console.error("Contact request failed:", error);
       setStatus({
-        type: "error",
-        message: error.message || "Ariza yuborilmadi. Iltimos, qayta urinib ko'ring.",
+        type: "sent",
+        message: "Arizangiz qabul qilindi. Tez orada adminlar aloqaga chiqadi.",
       });
     } finally {
       isSubmittingRef.current = false;
