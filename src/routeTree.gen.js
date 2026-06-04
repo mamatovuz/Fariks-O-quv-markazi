@@ -9,6 +9,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KurslarSlugRouteImport } from './routes/kurslar.$slug'
+import { Route as ApiTelegramWebhookRouteImport } from './routes/api.telegram-webhook'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
 
 const IndexRoute = IndexRouteImport.update({
@@ -21,6 +22,11 @@ const KurslarSlugRoute = KurslarSlugRouteImport.update({
   path: '/kurslar/$slug',
   getParentRoute: () => rootRouteImport,
 })
+const ApiTelegramWebhookRoute = ApiTelegramWebhookRouteImport.update({
+  id: '/api/telegram-webhook',
+  path: '/api/telegram-webhook',
+  getParentRoute: () => rootRouteImport,
+})
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
@@ -30,6 +36,7 @@ const ApiContactRoute = ApiContactRouteImport.update({
 const rootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiTelegramWebhookRoute: ApiTelegramWebhookRoute,
   KurslarSlugRoute: KurslarSlugRoute,
 }
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)
