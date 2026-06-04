@@ -23,7 +23,7 @@ const Route = createFileRoute("/")({
         content: "Kichik guruhlar, tajribali ustozlar, izchil metodika. 2016-yildan beri.",
       },
     ],
-    links: [{ rel: "canonical", href: "https://fariks.uz/" }],
+    links: [{ rel: "canonical", href: "https://fariksuz.up.railway.app/" }],
   }),
   component: Index,
 });
