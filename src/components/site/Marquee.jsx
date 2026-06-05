@@ -1,7 +1,7 @@
 const items = [
   "IELTS 7.5+",
   "SAT 1400+",
-  "Matematika \xB7 Olimpiada",
+  "Matematika",
   "Ingliz tili",
   "Rus tili",
   "Ona tili va Adabiyot",
