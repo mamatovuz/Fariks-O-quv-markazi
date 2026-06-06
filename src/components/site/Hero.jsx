@@ -12,7 +12,7 @@ function Hero({ stats = defaultContent.stats }) {
             <div className="eyebrow">№ 001 — Andijon</div>
             <div className="rule-line mt-4 w-16" />
             <p className="mt-6 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
-              2016-yildan beri o'quvchilarni xalqaro imtihonlar va oliygohlarga tayyorlovchi
+              2018-yildan beri o'quvchilarni xalqaro imtihonlar va oliygohlarga tayyorlovchi
               mustaqil o'quv markazi.
             </p>
           </div>
