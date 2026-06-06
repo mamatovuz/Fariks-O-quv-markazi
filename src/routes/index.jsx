@@ -35,12 +35,12 @@ function Index() {
     <main className="min-h-screen overflow-x-hidden bg-paper text-ink">
       <Nav />
       <Hero stats={content.stats} />
-      <Marquee />
+      <Marquee items={content.marquee?.items} />
       <Courses courses={content.courses} intro={content.coursesIntro} />
       <Method />
       <Teachers teachers={content.teachers} />
-      <Results />
-      <Contact courses={content.courses} />
+      <Results results={content.results} />
+      <Contact courses={content.courses} contact={content.contact} />
       <Footer />
     </main>
   );

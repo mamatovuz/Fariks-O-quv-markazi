@@ -1,48 +1,32 @@
-const stories = [
-  {
-    quote:
-      "Birinchi yarim yilda IELTS 6.0 dan 7.5 ga ko'tarildim. Mock-imtihonlar haqiqiy testdan ham qiyinroq edi \u2014 shuning uchun test kuni xotirjam o'tirdim.",
-    name: "Nodira A.",
-    where: "Westminster International University",
-  },
-  {
-    quote:
-      "Matematika menga doim qiyin tuyulardi. Ustoz xato qilishdan qo'rqishni olib tashladi. Olimpiyadada birinchi joyni oldim.",
-    name: "Sardor T.",
-    where: "Prezident maktabi, 9-sinf",
-  },
-  {
-    quote:
-      "Bir yil ichida SAT'da 1190 dan 1480 ga keldim. Application essayni FARIKS jamoasi bilan birga yozdim.",
-    name: "Diyora M.",
-    where: "NYU Abu Dhabi \xB7 2024",
-  },
-];
-function Results() {
+import { defaultContent } from "@/data/site-content";
+
+function Results({ results = defaultContent.results }) {
+  const stories = results.stories || [];
+
   return (
     <section id="natijalar" className="bg-paper py-20 md:py-36">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-6 md:px-10">
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-3">
-            <div className="eyebrow">Natijalar</div>
+            <div className="eyebrow">{results.eyebrow}</div>
             <h2
-              className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[0.95] tracking-[-0.02em] text-ink"
+              className="mt-6 text-balance font-display text-[clamp(2.25rem,4.5vw,3.75rem)] leading-[0.95] text-ink"
               style={{ fontWeight: 400 }}
             >
-              O'quvchilar
+              {results.title}
               <br />
               <em className="italic" style={{ fontWeight: 300 }}>
-                o'z so'zlari
+                {results.emphasis}
               </em>{" "}
-              bilan.
+              {results.suffix}
             </h2>
           </div>
 
-          <div className="col-span-12 grid grid-cols-1 gap-6 md:col-span-9 md:grid-cols-3">
-            {stories.map((s, i) => (
+          <div className="col-span-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:col-span-9 lg:grid-cols-3">
+            {stories.map((story, index) => (
               <figure
-                key={i}
-                className="relative flex flex-col justify-between border border-rule bg-card p-6 transition-colors hover:border-ember sm:p-7"
+                key={`${story.name}-${index}`}
+                className="relative flex min-w-0 flex-col justify-between border border-rule bg-card p-6 transition-colors hover:border-ember sm:p-7"
               >
                 <span
                   className="absolute -top-4 left-5 font-display text-6xl leading-none text-ember"
@@ -52,14 +36,14 @@ function Results() {
                   &ldquo;
                 </span>
                 <blockquote
-                  className="font-display text-lg leading-snug text-ink"
+                  className="break-words font-display text-lg leading-snug text-ink"
                   style={{ fontWeight: 400 }}
                 >
-                  {s.quote}
+                  {story.quote}
                 </blockquote>
                 <figcaption className="mt-10 border-t border-rule pt-4">
-                  <div className="text-sm text-ink">{s.name}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">{s.where}</div>
+                  <div className="text-sm text-ink">{story.name}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{story.where}</div>
                 </figcaption>
               </figure>
             ))}
@@ -69,4 +53,5 @@ function Results() {
     </section>
   );
 }
+
 export { Results };

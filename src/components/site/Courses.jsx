@@ -32,15 +32,15 @@ function Courses({ courses = defaultContent.courses, intro = defaultContent.cour
                 <Link
                   to="/kurslar/$slug"
                   params={{ slug: c.slug }}
-                  className="grid grid-cols-12 gap-4 py-7 md:gap-6 md:py-10"
+                  className="grid gap-4 py-7 sm:grid-cols-[3rem_1fr] md:grid-cols-12 md:gap-6 md:py-10"
                   aria-label={`${c.title} haqida batafsil`}
                 >
-                  <div className="col-span-2 md:col-span-1">
+                  <div className="md:col-span-1">
                     <span className="font-display text-sm text-ember">{c.no}</span>
                   </div>
-                  <div className="col-span-10 md:col-span-6">
+                  <div className="min-w-0 md:col-span-6">
                     <h3
-                      className="font-display text-2xl leading-tight text-ink md:text-3xl"
+                      className="text-balance font-display text-2xl leading-tight text-ink md:text-3xl"
                       style={{ fontWeight: 500 }}
                     >
                       {c.title}
@@ -49,15 +49,17 @@ function Courses({ courses = defaultContent.courses, intro = defaultContent.cour
                       {c.blurb}
                     </p>
                   </div>
-                  <div className="col-span-12 sm:col-span-6 md:col-span-2">
-                    <div className="eyebrow">Davomiyligi</div>
-                    <div className="mt-2 text-sm text-ink">{c.duration}</div>
+                  <div className="grid grid-cols-2 gap-4 sm:col-start-2 md:col-span-4 md:col-start-auto">
+                    <div className="min-w-0">
+                      <div className="eyebrow">Davomiyligi</div>
+                      <div className="mt-2 break-words text-sm text-ink">{c.duration}</div>
+                    </div>
+                    <div className="min-w-0">
+                      <div className="eyebrow">Daraja</div>
+                      <div className="mt-2 break-words text-sm text-ink">{c.level}</div>
+                    </div>
                   </div>
-                  <div className="col-span-12 sm:col-span-6 md:col-span-2">
-                    <div className="eyebrow">Daraja</div>
-                    <div className="mt-2 text-sm text-ink">{c.level}</div>
-                  </div>
-                  <div className="col-span-12 md:col-span-1 md:text-right">
+                  <div className="sm:col-start-2 md:col-span-1 md:col-start-auto md:text-right">
                     <span
                       className="font-display text-xl text-ink transition-all group-hover:text-ember"
                       aria-hidden

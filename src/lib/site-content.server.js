@@ -72,6 +72,61 @@ function normalizeCourse(course, index) {
   };
 }
 
+function normalizeResults(results, fallback) {
+  const stories = Array.isArray(results?.stories)
+    ? normalizeList(results?.stories, (story) => ({
+        quote: cleanText(story?.quote),
+        name: cleanText(story?.name),
+        where: cleanText(story?.where),
+      }))
+    : fallback.stories;
+
+  return {
+    eyebrow: cleanText(results?.eyebrow, fallback.eyebrow),
+    title: cleanText(results?.title, fallback.title),
+    emphasis: cleanText(results?.emphasis, fallback.emphasis),
+    suffix: cleanText(results?.suffix, fallback.suffix),
+    stories,
+  };
+}
+
+function normalizeContact(contact, fallback) {
+  return {
+    eyebrow: cleanText(contact?.eyebrow, fallback.eyebrow),
+    title: cleanText(contact?.title, fallback.title),
+    emphasis: cleanText(contact?.emphasis, fallback.emphasis),
+    suffix: cleanText(contact?.suffix, fallback.suffix),
+    leadLabel: cleanText(contact?.leadLabel, fallback.leadLabel),
+    leadText: cleanText(contact?.leadText, fallback.leadText),
+    addressLabel: cleanText(contact?.addressLabel, fallback.addressLabel),
+    address: cleanText(contact?.address, fallback.address),
+    mapLabel: cleanText(contact?.mapLabel, fallback.mapLabel),
+    mapUrl: cleanText(contact?.mapUrl, fallback.mapUrl),
+    hoursLabel: cleanText(contact?.hoursLabel, fallback.hoursLabel),
+    hours: cleanText(contact?.hours, fallback.hours),
+    formEyebrow: cleanText(contact?.formEyebrow, fallback.formEyebrow),
+    formTitle: cleanText(contact?.formTitle, fallback.formTitle),
+    nameLabel: cleanText(contact?.nameLabel, fallback.nameLabel),
+    namePlaceholder: cleanText(contact?.namePlaceholder, fallback.namePlaceholder),
+    phoneLabel: cleanText(contact?.phoneLabel, fallback.phoneLabel),
+    phonePlaceholder: cleanText(contact?.phonePlaceholder, fallback.phonePlaceholder),
+    courseLabel: cleanText(contact?.courseLabel, fallback.courseLabel),
+    detailsLabel: cleanText(contact?.detailsLabel, fallback.detailsLabel),
+    detailsPlaceholder: cleanText(contact?.detailsPlaceholder, fallback.detailsPlaceholder),
+    submitText: cleanText(contact?.submitText, fallback.submitText),
+    sendingText: cleanText(contact?.sendingText, fallback.sendingText),
+    sentText: cleanText(contact?.sentText, fallback.sentText),
+  };
+}
+
+function normalizeMarquee(marquee, fallback) {
+  return {
+    items: Array.isArray(marquee?.items)
+      ? normalizeList(marquee.items, (item) => cleanText(item))
+      : fallback.items,
+  };
+}
+
 function normalizeContent(content) {
   const fallback = defaultStore().content;
 
@@ -92,6 +147,9 @@ function normalizeContent(content) {
       body: cleanText(content?.coursesIntro?.body, fallback.coursesIntro.body),
     },
     courses: normalizeList(content?.courses, normalizeCourse),
+    marquee: normalizeMarquee(content?.marquee, fallback.marquee),
+    results: normalizeResults(content?.results, fallback.results),
+    contact: normalizeContact(content?.contact, fallback.contact),
     teachers: normalizeList(content?.teachers, (teacher) => ({
       img: cleanText(teacher?.img),
       name: cleanText(teacher?.name),

@@ -10,6 +10,9 @@ const tabs = [
   { id: "stats", label: "Statistika" },
   { id: "courses", label: "Kurslar" },
   { id: "teachers", label: "Ustozlar" },
+  { id: "marquee", label: "Yo'nalish lenta" },
+  { id: "results", label: "Natijalar" },
+  { id: "contact", label: "Aloqa" },
   { id: "settings", label: "Sozlamalar" },
 ];
 
@@ -38,6 +41,14 @@ function blankTeacher() {
     name: "Yangi ustoz",
     role: "",
     note: "",
+  };
+}
+
+function blankStory() {
+  return {
+    quote: "Yangi natija matni",
+    name: "Ism Familiya",
+    where: "O'quvchi haqida qisqa ma'lumot",
   };
 }
 
@@ -285,6 +296,15 @@ function AdminPage() {
                 currentTeacher={currentTeacher}
                 setStatus={setStatus}
               />
+            ) : null}
+            {tab === "marquee" ? (
+              <MarqueeEditor content={content} updateContent={updateContent} />
+            ) : null}
+            {tab === "results" ? (
+              <ResultsEditor content={content} updateContent={updateContent} />
+            ) : null}
+            {tab === "contact" ? (
+              <ContactEditor content={content} updateContent={updateContent} />
             ) : null}
             {tab === "settings" ? (
               <SettingsEditor
@@ -712,6 +732,199 @@ function TeachersEditor({
             </button>
           </div>
         ) : null}
+      </div>
+    </div>
+  );
+}
+
+function MarqueeEditor({ content, updateContent }) {
+  const items = content.marquee?.items || [];
+
+  return (
+    <div>
+      <SectionTitle
+        title="Yo'nalish lenta"
+        body="Saytda aylanib turadigan yo'nalish nomlari. Kerak bo'lsa alohida kurs bo'lmagan nomlarni ham qo'shing."
+      />
+      <div className="mt-6">
+        <TextListEditor
+          title="Lentadagi yo'nalishlar"
+          items={items}
+          onChange={(nextItems) =>
+            updateContent((draft) => {
+              draft.marquee = draft.marquee || structuredClone(defaultContent.marquee);
+              draft.marquee.items = nextItems;
+              return draft;
+            })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
+function ResultsEditor({ content, updateContent }) {
+  const results = content.results || defaultContent.results;
+  const stories = results.stories || [];
+
+  function updateResults(field, value) {
+    updateContent((draft) => {
+      draft.results = draft.results || structuredClone(defaultContent.results);
+      draft.results[field] = value;
+      return draft;
+    });
+  }
+
+  function updateStory(index, field, value) {
+    updateContent((draft) => {
+      draft.results = draft.results || structuredClone(defaultContent.results);
+      draft.results.stories = draft.results.stories || [];
+      draft.results.stories[index][field] = value;
+      return draft;
+    });
+  }
+
+  return (
+    <div>
+      <SectionTitle
+        title="Natijalar"
+        body="O'quvchilar fikrlari: sarlavha, izohlar, ism va o'qish joyi."
+      />
+
+      <div className="mt-6 rounded-md border border-rule p-4">
+        <h3 className="font-display text-2xl">Bo'lim sarlavhasi</h3>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <Field
+            label="Eyebrow"
+            value={results.eyebrow}
+            onChange={(value) => updateResults("eyebrow", value)}
+          />
+          <Field
+            label="Sarlavha"
+            value={results.title}
+            onChange={(value) => updateResults("title", value)}
+          />
+          <Field
+            label="Italic qism"
+            value={results.emphasis}
+            onChange={(value) => updateResults("emphasis", value)}
+          />
+          <Field
+            label="Oxirgi qism"
+            value={results.suffix}
+            onChange={(value) => updateResults("suffix", value)}
+          />
+        </div>
+      </div>
+
+      <ArrayBlock title="O'quvchilar fikrlari">
+        {stories.map((story, index) => (
+          <div key={index} className="rounded-md border border-rule p-4">
+            <Textarea
+              label="Fikr matni"
+              value={story.quote}
+              onChange={(value) => updateStory(index, "quote", value)}
+            />
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <Field
+                label="Ism"
+                value={story.name}
+                onChange={(value) => updateStory(index, "name", value)}
+              />
+              <Field
+                label="Joy / natija"
+                value={story.where}
+                onChange={(value) => updateStory(index, "where", value)}
+              />
+            </div>
+            <DeleteButton
+              onClick={() =>
+                updateContent((draft) => {
+                  draft.results = draft.results || structuredClone(defaultContent.results);
+                  draft.results.stories.splice(index, 1);
+                  return draft;
+                })
+              }
+            />
+          </div>
+        ))}
+        <AddButton
+          label="Fikr qo'shish"
+          onClick={() =>
+            updateContent((draft) => {
+              draft.results = draft.results || structuredClone(defaultContent.results);
+              draft.results.stories = draft.results.stories || [];
+              draft.results.stories.push(blankStory());
+              return draft;
+            })
+          }
+        />
+      </ArrayBlock>
+    </div>
+  );
+}
+
+function ContactEditor({ content, updateContent }) {
+  const contact = content.contact || defaultContent.contact;
+  const fields = [
+    ["eyebrow", "Eyebrow"],
+    ["title", "Katta sarlavha 1-qator"],
+    ["emphasis", "Italic qator"],
+    ["suffix", "Katta sarlavha oxiri"],
+    ["leadLabel", "Aloqa label"],
+    ["leadText", "Aloqa matni", "textarea"],
+    ["addressLabel", "Manzil label"],
+    ["address", "Manzil", "textarea"],
+    ["mapLabel", "Xarita tugmasi"],
+    ["mapUrl", "Xarita linki"],
+    ["hoursLabel", "Ish vaqti label"],
+    ["hours", "Ish vaqti"],
+    ["formEyebrow", "Forma eyebrow"],
+    ["formTitle", "Forma sarlavhasi"],
+    ["nameLabel", "Ism label"],
+    ["namePlaceholder", "Ism placeholder"],
+    ["phoneLabel", "Telefon label"],
+    ["phonePlaceholder", "Telefon placeholder"],
+    ["courseLabel", "Yo'nalish label"],
+    ["detailsLabel", "Batafsil so'rov label"],
+    ["detailsPlaceholder", "Batafsil so'rov placeholder", "textarea"],
+    ["submitText", "Yuborish tugmasi"],
+    ["sendingText", "Yuborilmoqda matni"],
+    ["sentText", "Yuborilgandan keyingi matn", "textarea"],
+  ];
+
+  function updateContact(field, value) {
+    updateContent((draft) => {
+      draft.contact = draft.contact || structuredClone(defaultContent.contact);
+      draft.contact[field] = value;
+      return draft;
+    });
+  }
+
+  return (
+    <div>
+      <SectionTitle
+        title="Aloqa"
+        body="Aloqa bo'limidagi matnlar, manzil, xarita linki va forma yozuvlari."
+      />
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        {fields.map(([key, label, type]) =>
+          type === "textarea" ? (
+            <Textarea
+              key={key}
+              label={label}
+              value={contact[key]}
+              onChange={(value) => updateContact(key, value)}
+            />
+          ) : (
+            <Field
+              key={key}
+              label={label}
+              value={contact[key]}
+              onChange={(value) => updateContact(key, value)}
+            />
+          ),
+        )}
       </div>
     </div>
   );

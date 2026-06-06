@@ -6,10 +6,7 @@ const initialStatus = {
   message: "",
 };
 
-const mapUrl = "https://maps.app.goo.gl/yYW1uQNSPN1BweEc8";
-const fullAddress = "Andijon viloyati, Qo'rg'ontepa tumani Hokimyat roparasida.";
-
-function Contact({ courses = defaultContent.courses }) {
+function Contact({ courses = defaultContent.courses, contact = defaultContent.contact }) {
   const [status, setStatus] = useState(initialStatus);
   const isSubmittingRef = useRef(false);
 
@@ -38,17 +35,13 @@ function Contact({ courses = defaultContent.courses }) {
       }
 
       form.reset();
-      setStatus({
-        type: "sent",
-        message: "Arizangiz yuborildi. Tez orada adminlar aloqaga chiqadi.",
-      });
     } catch (error) {
       console.error("Contact request failed:", error);
+    } finally {
       setStatus({
         type: "sent",
-        message: "Arizangiz qabul qilindi. Tez orada adminlar aloqaga chiqadi.",
+        message: contact.sentText,
       });
-    } finally {
       isSubmittingRef.current = false;
     }
   }
@@ -57,101 +50,101 @@ function Contact({ courses = defaultContent.courses }) {
 
   return (
     <section id="aloqa" className="relative overflow-hidden bg-ember/95 py-20 text-ink md:py-36">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-5 sm:px-6 md:gap-10 md:px-10">
-        <div className="col-span-12 md:col-span-6">
-          <div className="text-[11px] uppercase tracking-[0.22em] text-ink/70">Aloqa</div>
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10">
+        <div className="min-w-0 lg:col-span-6">
+          <div className="text-[11px] uppercase tracking-[0.22em] text-ink/70">
+            {contact.eyebrow}
+          </div>
           <h2
-            className="mt-6 font-display text-[clamp(2.35rem,10vw,5rem)] leading-[0.9] tracking-[-0.02em]"
+            className="mt-6 max-w-full text-balance font-display text-[clamp(2.2rem,14vw,5rem)] leading-[0.92] text-ink"
             style={{ fontWeight: 400 }}
           >
-            Bir suhbat -
+            {contact.title}
             <br />
             <em className="italic" style={{ fontWeight: 300 }}>
-              hammasining
+              {contact.emphasis}
             </em>
             <br />
-            boshlanishi.
+            {contact.suffix}
           </h2>
 
           <dl className="mt-10 space-y-6 text-base sm:mt-12">
-            <ContactFact label="Aloqa">
-              Ariza yuboring, adminlar tez orada qo'ng'iroq qiladi
-            </ContactFact>
+            <ContactFact label={contact.leadLabel}>{contact.leadText}</ContactFact>
 
-            <ContactFact label="Manzil">
-              {fullAddress}
+            <ContactFact label={contact.addressLabel}>
+              {contact.address}
               <a
-                href={mapUrl}
+                href={contact.mapUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-3 block text-sm font-sans text-ink/70 underline-offset-4 hover:text-ink hover:underline"
               >
-                Xaritada ko'rish
+                {contact.mapLabel}
               </a>
             </ContactFact>
 
-            <ContactFact label="Ish vaqti" border={false}>
-              Du - Sha, 09:00 - 20:00
+            <ContactFact label={contact.hoursLabel} border={false}>
+              {contact.hours}
             </ContactFact>
           </dl>
         </div>
 
-        <div className="col-span-12 md:col-span-6 md:pl-10">
-          <form onSubmit={handleSubmit} className="rounded-md bg-paper p-6 sm:p-8 md:p-10">
-            <div className="eyebrow">Bepul sinov darsi uchun</div>
+        <div className="min-w-0 lg:col-span-6 lg:pl-10">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-full rounded-md bg-paper p-5 sm:p-8 lg:p-10"
+          >
+            <div className="eyebrow">{contact.formEyebrow}</div>
             <h3
               className="mt-3 font-display text-2xl text-ink sm:text-3xl"
               style={{ fontWeight: 500 }}
             >
-              Ariza qoldiring
+              {contact.formTitle}
             </h3>
 
             <div className="mt-8 space-y-6">
-              <Field label="Ism" name="name" placeholder="Ism Familiya" />
-              <Field label="Telefon" name="phone" placeholder="+998 __ ___ __ __" type="tel" />
-              <div>
-                <label className="eyebrow block">Yo'nalish</label>
+              <Field label={contact.nameLabel} name="name" placeholder={contact.namePlaceholder} />
+              <Field
+                label={contact.phoneLabel}
+                name="phone"
+                placeholder={contact.phonePlaceholder}
+                type="tel"
+              />
+              <div className="min-w-0">
+                <label className="eyebrow block">{contact.courseLabel}</label>
                 <select
                   name="course"
                   required
-                  className="mt-2 w-full border-b border-rule bg-transparent py-3 text-base text-ink outline-none focus:border-ember"
+                  className="mt-2 w-full min-w-0 border-b border-rule bg-transparent py-3 text-base text-ink outline-none focus:border-ember"
                 >
                   {courses.map((course) => (
                     <option key={course.slug}>{course.title}</option>
                   ))}
                 </select>
               </div>
-              <div>
+              <div className="min-w-0">
                 <label htmlFor="details" className="eyebrow block">
-                  Batafsil so'rov
+                  {contact.detailsLabel}
                 </label>
                 <textarea
                   id="details"
                   name="details"
                   required
                   rows={4}
-                  placeholder="Qaysi kurs, darajangiz, qulay vaqt va qo'shimcha savollaringizni yozing"
-                  className="mt-2 min-h-28 w-full resize-y border-b border-rule bg-transparent py-3 text-base text-ink placeholder:text-ink/30 outline-none focus:border-ember"
+                  placeholder={contact.detailsPlaceholder}
+                  className="mt-2 min-h-28 w-full min-w-0 resize-y border-b border-rule bg-transparent py-3 text-base text-ink placeholder:text-ink/30 outline-none focus:border-ember"
                 />
               </div>
             </div>
 
-            {status.message ? (
-              <p
-                className={`mt-6 text-sm ${
-                  status.type === "error" ? "text-red-700" : "text-ink/70"
-                }`}
-              >
-                {status.message}
-              </p>
-            ) : null}
+            {status.message ? <p className="mt-6 text-sm text-ink/70">{status.message}</p> : null}
 
             <button
               type="submit"
               disabled={isSending}
               className="mt-10 inline-flex w-full items-center justify-between rounded-full bg-ink px-6 py-4 text-sm text-paper transition-all hover:bg-ember-deep disabled:opacity-70 sm:px-7"
             >
-              <span>{isSending ? "Yuborilmoqda..." : "Yuborish"}</span>
+              <span>{isSending ? contact.sendingText : contact.submitText}</span>
               <span aria-hidden>{status.type === "sent" ? "OK" : "->"}</span>
             </button>
           </form>
@@ -169,14 +162,16 @@ function ContactFact({ label, children, border = true }) {
       }`}
     >
       <dt className="text-[11px] uppercase tracking-[0.22em] text-ink/70">{label}</dt>
-      <dd className="font-display text-lg leading-tight sm:col-span-2 sm:text-xl">{children}</dd>
+      <dd className="min-w-0 break-words font-display text-lg leading-tight sm:col-span-2 sm:text-xl">
+        {children}
+      </dd>
     </div>
   );
 }
 
 function Field({ label, name, placeholder, type = "text" }) {
   return (
-    <div>
+    <div className="min-w-0">
       <label htmlFor={name} className="eyebrow block">
         {label}
       </label>
@@ -186,7 +181,7 @@ function Field({ label, name, placeholder, type = "text" }) {
         type={type}
         required
         placeholder={placeholder}
-        className="mt-2 w-full border-b border-rule bg-transparent py-3 text-base text-ink placeholder:text-ink/30 outline-none focus:border-ember"
+        className="mt-2 w-full min-w-0 border-b border-rule bg-transparent py-3 text-base text-ink placeholder:text-ink/30 outline-none focus:border-ember"
       />
     </div>
   );
