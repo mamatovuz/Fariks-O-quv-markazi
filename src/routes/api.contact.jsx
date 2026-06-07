@@ -37,10 +37,7 @@ function json(data, init) {
 }
 
 function getTelegramConfig() {
-  const siteUrl = clean(process.env.PUBLIC_SITE_URL || "https://fariksuz.up.railway.app").replace(
-    /\/+$/,
-    "",
-  );
+  const siteUrl = clean(process.env.PUBLIC_SITE_URL || "https://fariks.uz").replace(/\/+$/, "");
 
   return {
     token: clean(process.env.TELEGRAM_BOT_TOKEN),

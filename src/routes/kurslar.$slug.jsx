@@ -15,7 +15,7 @@ const Route = createFileRoute("/kurslar/$slug")({
       };
     const title = `${c.title} \u2014 FARIKS o'quv markazi`;
     const desc = `${c.tagline} ${c.blurb} Davomiyligi ${c.duration}, ${c.schedule}. Narxi ${c.price}.`;
-    const url = `https://fariksuz.up.railway.app/kurslar/${c.slug}`;
+    const url = `https://fariks.uz/kurslar/${c.slug}`;
     return {
       meta: [
         { title },
@@ -40,7 +40,7 @@ const Route = createFileRoute("/kurslar/$slug")({
             provider: {
               "@type": "EducationalOrganization",
               name: "FARIKS o'quv markazi",
-              url: "https://fariksuz.up.railway.app",
+              url: "https://fariks.uz",
             },
             educationalLevel: c.level,
             timeRequired: c.duration,
