@@ -9,7 +9,7 @@ function Hero({ stats = defaultContent.stats }) {
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           {/* Left: meta column */}
           <div className="col-span-12 md:col-span-3 md:pt-6">
-            <div className="eyebrow">№ 001 — Andijon</div>
+            <div className="eyebrow">№ 01 — Andijon</div>
             <div className="rule-line mt-4 w-16" />
             <p className="mt-6 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
               2018-yildan beri o'quvchilarni xalqaro imtihonlar va oliygohlarga tayyorlovchi

@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /api/site-content
 Disallow: /api/
 
 Sitemap: https://fariks.uz/sitemap.xml
