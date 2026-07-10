@@ -1,16 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { MongoClient } from "mongodb";
 
+import { getDb } from "@/lib/db.server";
 import { defaultContent } from "@/data/site-content";
 
 const storePath =
   process.env.CONTENT_STORE_PATH || path.join(process.cwd(), ".data", "site-content.json");
-const mongoDbName = process.env.MONGODB_DB || "fariks";
-const mongoCollectionName = process.env.MONGODB_COLLECTION || "site_content";
-const mongoDocumentId = "main";
-let mongoClientPromise;
+const documentId = "main";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -173,92 +170,67 @@ function normalizeStore(store) {
   };
 }
 
-function getMongoUri() {
-  return String(
-    process.env.MONGODB_URI || process.env.MONGO_URL || process.env.DATABASE_URL || "",
-  ).trim();
-}
-
-async function getMongoCollection() {
-  const uri = getMongoUri();
-  if (!uri) return null;
-
-  if (!mongoClientPromise) {
-    const client = new MongoClient(uri, {
-      connectTimeoutMS: 8_000,
-      serverSelectionTimeoutMS: 8_000,
-    });
-    mongoClientPromise = client.connect().catch((error) => {
-      mongoClientPromise = undefined;
-      throw error;
-    });
-  }
-
-  const client = await mongoClientPromise;
-  return client.db(mongoDbName).collection(mongoCollectionName);
-}
-
-async function readFileStore() {
+// One-time seed source: if the SQLite row does not exist yet, migrate the
+// legacy JSON file (if present) so existing content is preserved.
+async function readSeedStore() {
   try {
     const text = await fs.readFile(storePath, "utf8");
     return normalizeStore(JSON.parse(text));
   } catch (error) {
-    if (error?.code !== "ENOENT") console.error("Site content store read failed:", error);
+    if (error?.code !== "ENOENT") console.error("Site content seed read failed:", error);
     return defaultStore();
   }
 }
 
-async function writeFileStore(store) {
+function writeStore(store) {
   const normalized = normalizeStore(store);
-  await fs.mkdir(path.dirname(storePath), { recursive: true });
-  await fs.writeFile(storePath, `${JSON.stringify(normalized, null, 2)}\n`, "utf8");
-  return normalized;
-}
+  const db = getDb();
+  const now = new Date().toISOString();
 
-async function readMongoStore(collection) {
-  const document = await collection.findOne({ _id: mongoDocumentId });
-
-  if (document) {
-    return normalizeStore(document);
-  }
-
-  const seed = await readFileStore();
-  await writeMongoStore(collection, seed);
-  return seed;
-}
-
-async function writeMongoStore(collection, store) {
-  const normalized = normalizeStore(store);
-  const now = new Date();
-
-  await collection.updateOne(
-    { _id: mongoDocumentId },
-    {
-      $set: {
-        auth: normalized.auth,
-        content: normalized.content,
-        updatedAt: now,
-      },
-      $setOnInsert: {
-        createdAt: now,
-      },
-    },
-    { upsert: true },
-  );
+  db.prepare(
+    `INSERT INTO site_content (id, content, auth_username, auth_password_hash, created_at, updated_at)
+     VALUES (@id, @content, @username, @passwordHash, @now, @now)
+     ON CONFLICT(id) DO UPDATE SET
+       content = excluded.content,
+       auth_username = excluded.auth_username,
+       auth_password_hash = excluded.auth_password_hash,
+       updated_at = excluded.updated_at`,
+  ).run({
+    id: documentId,
+    content: JSON.stringify(normalized.content),
+    username: normalized.auth.username,
+    passwordHash: normalized.auth.passwordHash,
+    now,
+  });
 
   return normalized;
 }
 
 async function readStore() {
-  const collection = await getMongoCollection();
-  if (collection) return readMongoStore(collection);
-  return readFileStore();
-}
+  const db = getDb();
+  const row = db.prepare(`SELECT content, auth_username, auth_password_hash FROM site_content WHERE id = ?`).get(
+    documentId,
+  );
 
-async function writeStore(store) {
-  const collection = await getMongoCollection();
-  if (collection) return writeMongoStore(collection, store);
-  return writeFileStore(store);
+  if (row) {
+    let content;
+    try {
+      content = JSON.parse(row.content);
+    } catch {
+      content = {};
+    }
+
+    return normalizeStore({
+      content,
+      auth: {
+        username: row.auth_username,
+        passwordHash: row.auth_password_hash,
+      },
+    });
+  }
+
+  const seed = await readSeedStore();
+  return writeStore(seed);
 }
 
 async function readPublicContent() {

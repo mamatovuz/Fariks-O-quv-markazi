@@ -58,4 +58,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // better-sqlite3 is a native addon; keep it external so it is loaded from
+  // node_modules at runtime instead of being bundled into the SSR output.
+  ssr: {
+    external: ["better-sqlite3"],
+  },
+  optimizeDeps: {
+    exclude: ["better-sqlite3"],
+  },
 });
